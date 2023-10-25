@@ -1,5 +1,6 @@
 package com.classbook.bean;
 
+//结果类
 public class Result {
     private Integer code;//1、成功  0、失败
     private String msg;//提示信息
