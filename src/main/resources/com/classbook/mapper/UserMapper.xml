@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.classbook.mapper.UserMapper">
+    <insert id="insertAccount">
+        insert into user(account,pwd) values (#{account},#{pwd});
+    </insert>
+
+    <!--使用xml完成sql语句-->
+    <!--resultType表示单条记录所封装的类型-->
+    <select id="listUser" resultType="com.classbook.bean.User">
+        select * from user;
+    </select>
+
+    <!--使用xml完成sql语句-->
+    <!--resultType表示单条记录所封装的类型-->
+    <select id="queryUserByAccountAndPwd" resultType="com.classbook.bean.User">
+        select * from user where account = #{account} and pwd = #{pwd};
+    </select>
+
+    <select id="queryUserBy" resultType="com.classbook.bean.User">
+        select * from user where account = #{account};
+    </select>
+
+    <update id="updatePwd">
+        update user
+        <set>
+            <if test="pwd != null">pwd=#{pwd},</if>
+        </set>
+        where account =#{account}
+    </update>
+
+    <insert id="insetSchool">
+        insert into school (
+            account,username,gender,schoolname,schoolmaster,
+            classname,classteacher,classnumber,classintro)
+             values (
+                     #{account},#{username},#{gender},#{schoolname},#{schoolmaster},
+                     #{classname},#{classteacher},#{classnumber},#{classintro}
+                    );
+    </insert>
+
+    <select id="querySchoolCount" parameterType="String" resultType="Integer">
+        select count(0) from school where account = #{account};
+    </select>
+
+    <select id="querySchoolList" parameterType="String" resultType="com.classbook.bean.School">
+        select * from school where account = #{account};
+    </select>
+
+    <insert id="insertStudent">
+        insert into student (
+            school_id,name,gender,age,birthday,constellation,zodiac,
+            wechat,qq,phone,address,nickname,color,course,fruit,animal,idol,msg)
+        values (
+                   #{school_id},#{name},#{gender},#{age},#{birthday},#{constellation},#{zodiac},#{wechat},
+                   #{qq},#{phone},#{address},#{nickname},#{color},#{course},#{fruit},#{animal},#{idol},#{msg}
+               );
+    </insert>
+
+    <select id="queryclassmatelist" parameterType="String" resultType="com.classbook.bean.Student">
+        select * from student where schoolid = #{schoolid};
+    </select>
+
+    <select id="queryclassmate" parameterType="String" resultType="com.classbook.bean.Student">
+        select * from student where id = #{classmateid};
+    </select>
+
+    <!--    &lt;!&ndash; 动态查询sql&ndash;&gt;-->
+<!--    <select id="xmlQueryListIf" resultType="com.example.demo4.bean.Emp">-->
+<!--        select * from emp-->
+
+<!--        <where>-->
+
+<!--            <if test="name != null">-->
+<!--                name like concat('%',#{name},'%')-->
+<!--            </if>-->
+
+<!--            <if test="gender != null">-->
+<!--                and gender=#{gender}-->
+<!--            </if>-->
+
+<!--            <if test="begin != null and end != null">-->
+<!--                and entrydate between #{begin} and #{end}-->
+<!--            </if>-->
+
+<!--        </where>-->
+
+<!--        order by update_time desc-->
+<!--    </select>-->
+
+<!--    &lt;!&ndash;  动态更新1&ndash;&gt;-->
+<!--    <update id="updateToEmpOne">-->
+<!--        update emp-->
+<!--        set-->
+<!--        <if test="username != null">username=#{username}</if>-->
+<!--        <if test="name != null">,name=#{name}</if>-->
+<!--        <if test="gender != null">,gender=#{gender}</if>-->
+<!--        <if test="image != null">,image=#{image}</if>-->
+<!--        <if test="job != null">,job=#{job}</if>-->
+<!--        <if test="entrydate != null">,entrydate=#{entrydate}</if>-->
+<!--        <if test="deptId != null">,dept_id=#{deptId}</if>-->
+<!--        <if test="updateTime != null">,update_time=#{updateTime}</if>-->
+<!--        where id =#{id}-->
+<!--    </update>-->
+
+<!--    &lt;!&ndash;  动态更新2&ndash;&gt;-->
+<!--    <update id="updateToEmpTwo">-->
+<!--        update emp-->
+<!--        <set>-->
+<!--        <if test="username != null">username=#{username},</if>-->
+<!--        <if test="name != null">name=#{name},</if>-->
+<!--        <if test="gender != null">gender=#{gender},</if>-->
+<!--        <if test="image != null">image=#{image},</if>-->
+<!--        <if test="job != null">job=#{job},</if>-->
+<!--        <if test="entrydate != null">entrydate=#{entrydate},</if>-->
+<!--        <if test="deptId != null">dept_id=#{deptId},</if>-->
+<!--        <if test="updateTime != null">update_time=#{updateTime}</if>-->
+<!--        </set>-->
+<!--        where id =#{id}-->
+<!--    </update>-->
+
+<!--    &lt;!&ndash;  动态删除-->
+<!--    delete from emp where id in (18,19,20);-->
+
+<!--    collection：遍历的集合-->
+<!--    item：遍历出来的元素-->
+<!--    separator：分隔符-->
+<!--    open、close：遍历开启、结束拼接的sql片段，如：()-->
+<!--    &ndash;&gt;-->
+<!--    <delete id="deleteByIds">-->
+<!--        delete from emp where id in-->
+<!--        <foreach collection="ids" item="id" separator="," open="(" close=")">-->
+<!--            #{id}-->
+<!--        </foreach>-->
+<!--    </delete>-->
+
+
+<!--    &lt;!&ndash;抽取共有sql查询 为commonSelect&ndash;&gt;-->
+<!--    <sql id="commonSelect">-->
+<!--        select id,username,pwd,name,gender,image,job,entrydate,dept_id,create_time,update_time from emp-->
+<!--    </sql>-->
+<!--    <select id="queryEmpListInclude" resultType="com.example.demo4.bean.Emp">-->
+<!--        <include refid="commonSelect"/>-->
+<!--        <where>-->
+<!--            <if test="name != null">-->
+<!--                name like concat('%',#{name},'%')-->
+<!--            </if>-->
+<!--            <if test="gender != null">-->
+<!--                and gender=#{gender}-->
+<!--            </if>-->
+<!--        </where>-->
+<!--        order by update_time desc-->
+<!--    </select>-->
+<!--    <select id="queryEmpByIdInclude" resultType="com.example.demo4.bean.Emp">-->
+<!--        <include refid="commonSelect"/>-->
+<!--        where id = #{id}-->
+<!--    </select>-->
+
+</mapper>
